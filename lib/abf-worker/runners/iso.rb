@@ -18,7 +18,7 @@ module AbfWorker::Runners
       if @worker.status != AbfWorker::BaseWorker::BUILD_CANCELED
         prepare_script
         exit_status = nil
-        final_command = 'cd ' + ENV['HOME'] + '/iso_builder; sudo ' + @params + ' ABF=1 /bin/bash ' + @command
+        final_command = 'cd ' + ENV['HOME'] + '/iso_builder;' + @params + ' ABF=1 /bin/bash ' + @command
         process = IO.popen(final_command, 'r', :err=>[:child, :out]) do |io|
           while true
             begin

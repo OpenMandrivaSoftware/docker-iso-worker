@@ -1,4 +1,5 @@
 require 'abf-worker/live_logger'
+require 'abf-worker/file_logger'
 
 module AbfWorker
   class BaseWorker
@@ -31,7 +32,11 @@ module AbfWorker
     protected
 
     def init_live_logger(key_name)
-      @logger = AbfWorker::LiveLogger.new(key_name)
+      @live_logger = AbfWorker::LiveLogger.new(key_name)
+    end
+
+    def init_file_logger(file_path)
+      @file_logger = AbfWorker::FileLogger.new(file_path)
     end
 
     def initialize_live_inspector(time_living)

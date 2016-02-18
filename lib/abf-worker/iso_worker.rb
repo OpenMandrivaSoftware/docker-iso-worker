@@ -5,14 +5,12 @@ module AbfWorker
   class IsoWorker < BaseWorker
     @queue = :iso_worker
 
-    attr_accessor :runner
+    attr_accessor :runner,
+                  :live_logger,
+                  :file_logger
 
     def self.perform(options)
       self.new(options).perform
-    end
-
-    def logger
-      @logger
     end
 
     protected
@@ -21,8 +19,13 @@ module AbfWorker
       @observer_queue       = 'iso_worker_observer'
       @observer_class       = 'AbfWorker::IsoWorkerObserver'
       super options
+
+      output_folder = APP_CONFIG['output_folder']
+      Dir.mkdir(output_folder) if not Dir.exists?(output_folder)
+
       @runner = AbfWorker::Runners::IsoRunner.new(self, options)
       init_live_logger("abfworker::iso-worker-#{@build_id}")
+      init_file_logger(output_folder + "/iso_build.log")
       initialize_live_inspector(options['time_living'])
     end
 

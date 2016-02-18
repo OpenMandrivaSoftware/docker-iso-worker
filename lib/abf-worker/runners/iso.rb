@@ -12,8 +12,6 @@ module AbfWorker::Runners
 
     def run_script()
       puts "Run " + @command
-      output_folder = APP_CONFIG['output_folder']
-      Dir.mkdir(output_folder) if not Dir.exists?(output_folder)
 
       if @worker.status != AbfWorker::BaseWorker::BUILD_CANCELED
         prepare_script
@@ -25,7 +23,8 @@ module AbfWorker::Runners
               break if io.eof
               line = io.gets
               puts line
-              @worker.logger.log(line)
+              @worker.live_logger.log(line)
+              @worker.file_logger.log(line)
             rescue => e
               break
             end
@@ -41,6 +40,7 @@ module AbfWorker::Runners
           end
           save_results
         end
+	system "sudo rm -rf #{ENV['HOME']}/iso_builder"
       end
     end
 
@@ -48,10 +48,7 @@ module AbfWorker::Runners
 
     def save_results
       command = "cd #{ENV['HOME']}/iso_builder;"\
-                "tar -zcvf ../output/archives.tar.gz archives;"\
-                "sudo mv results/* ../output;"\
-                "cd ..;"\
-                "sudo rm -rf iso_builder"
+                "sudo mv results/* ../output;"
       system command
     end
 
@@ -63,7 +60,7 @@ module AbfWorker::Runners
       command = "cd #{ENV['HOME']};"\
                 "curl -O -L #{@srcpath};"\
                 "tar -zxf #{file_name};"\
-                "rm -rf iso_builder;"\
+                "sudo rm -rf iso_builder;"\
                 "mv #{folder_name}-#{branch} iso_builder;"\
                 "rm -rf #{file_name}"
       system command

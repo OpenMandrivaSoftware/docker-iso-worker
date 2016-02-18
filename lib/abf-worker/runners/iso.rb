@@ -63,6 +63,7 @@ module AbfWorker::Runners
       command = "cd #{ENV['HOME']};"\
                 "curl -O -L #{@srcpath};"\
                 "tar -zxf #{file_name};"\
+                "rm -rf iso_builder;"\
                 "mv #{folder_name}-#{branch} iso_builder;"\
                 "rm -rf #{file_name}"
       system command

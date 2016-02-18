@@ -32,6 +32,7 @@ module AbfWorker::Runners
           Process.wait(io.pid)
           @exit_status = $?.exitstatus
         end
+        @worker.file_logger.close
         if @worker.status != AbfWorker::BaseWorker::BUILD_CANCELED
           if @exit_status.nil? or @exit_status != 0
             @worker.status = AbfWorker::BaseWorker::BUILD_FAILED

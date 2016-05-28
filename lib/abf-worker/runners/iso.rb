@@ -41,7 +41,7 @@ module AbfWorker::Runners
           end
           save_results
         end
-	system "sudo rm -rf #{ENV['HOME']}/iso_builder"
+	      system "sudo rm -rf #{ENV['HOME']}/iso_builder"
       end
     end
 

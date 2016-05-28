@@ -2,9 +2,7 @@ require 'abf-worker/runners/iso'
 require 'abf-worker/inspectors/live_inspector'
 
 module AbfWorker
-  class IsoWorker < BaseWorker
-    @queue = :iso_worker
-
+  class IsoWorkerResque < BaseWorker
     attr_accessor :runner,
                   :live_logger,
                   :file_logger
@@ -36,6 +34,14 @@ module AbfWorker
       })
     end
 
+  end
+
+  class IsoWorker
+    include Sidekiq::Worker
+
+    def perform(options)
+      IsoWorkerResque.perform(options)
+    end
   end
 
 end

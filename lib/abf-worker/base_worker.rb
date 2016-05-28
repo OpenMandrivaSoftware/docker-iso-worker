@@ -95,8 +95,8 @@ module AbfWorker
         status: @status,
       }.merge(args)]
 
-      Resque.push(
-        @observer_queue,
+      Sidekiq::Client.push(
+        'queue' => @observer_queue,
         'class' => @observer_class,
         'args'  => worker_args
       )

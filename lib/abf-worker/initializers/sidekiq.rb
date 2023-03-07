@@ -15,3 +15,4 @@ end
 Sidekiq.configure_server do |config|
   config.redis = { :url => redis_url, :size => 3 }
 end
+Sidekiq.strict_args!(false)
